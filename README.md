@@ -2,7 +2,7 @@
 
 The echart-widget is a WireCloud widget that provides an easy way to to create interactive charts/graphs using the [ECharts Library](https://ecomfe.github.io/echarts-doc/public/en/index.html).
 
-##How it's works?
+## How it's works?
 Send the [ECharts option JSON](https://ecomfe.github.io/echarts-doc/public/en/option.html#title) to the `echarts_options` input endpoint.
 
 ECharts options JSON example for a simple linear chart:
@@ -22,7 +22,7 @@ ECharts options JSON example for a simple linear chart:
 }
 ```
 
-![linechart example](https://github.com/Wirecloud/echarts-widget/blob/develop/src/images/exampleLineChart.png)
+<a href="url"><img src="https://github.com/Wirecloud/echarts-widget/blob/develop/src/images/exampleLineChart.png" align="center" width="40%" ></a>
 
 See more examples in [ECharts Examples Site](https://ecomfe.github.io/echarts-examples/public/index.html).
 
