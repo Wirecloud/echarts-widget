@@ -1,0 +1,15 @@
+{
+  "name": "widget",
+  "dependencies": {
+    "moment": "2.22.2",
+    "echarts": "4.2.0-rc.2"
+  },
+  "exportsOverride": {
+    "echarts": {
+      "js": "dist/echarts.min.js"
+    },
+    "moment": {
+      "js": "min/moment-with-locales.min.js"
+    }
+  }
+}

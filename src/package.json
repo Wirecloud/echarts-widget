@@ -1,0 +1,20 @@
+{
+  "name": "echarts-widget",
+  "private": true,
+  "version": "0.0.1",
+  "description": "ECharts Widget",
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
+  "author": "FICODES Team",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^1.0.0",
+    "extract-loader": "^3.0.0",
+    "file-loader": "^2.0.0",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0",
+    "webpack": "^3.12.0",
+    "webpack-dev-server": "^2.11.3"
+  }
+}
