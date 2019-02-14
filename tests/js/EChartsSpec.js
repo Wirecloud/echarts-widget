@@ -129,6 +129,7 @@
     var echartsClearSpy = jasmine.createSpy("clear");
     var echartsHideLoadingSpy = jasmine.createSpy("hideLoading");
     var echartsShowLoadingSpy = jasmine.createSpy("showLoading");
+    var resizeSpy = jasmine.createSpy('resize');
     describe("ECharts", function () {
 
         var widget;
@@ -158,7 +159,8 @@
                 setOption: echartsSetOptionSpy,
                 clear: echartsClearSpy,
                 hideLoading: echartsHideLoadingSpy,
-                showLoading: echartsShowLoadingSpy
+                showLoading: echartsShowLoadingSpy,
+                resize: resizeSpy
             };
 
             widget = new ECharts();
@@ -175,6 +177,7 @@
                 expect(echartsShowLoadingSpy).toHaveBeenCalledTimes(1);
                 expect(echartsSetOptionSpy).toHaveBeenCalledWith(expectedNullOptions);
                 expect(echartsHideLoadingSpy).toHaveBeenCalledTimes(1);
+                expect(MashupPlatform.widget.log).not.toHaveBeenCalled();
             });
 
             it("should handle basic Line chart", () => {
@@ -192,6 +195,29 @@
                 expect(echartsSetOptionSpy).toHaveBeenCalledWith(lineExample, true);
                 expect(echartsSetOptionSpy).toHaveBeenCalledWith(sunburstChart, true);
                 expect(echartsHideLoadingSpy).toHaveBeenCalledTimes(2);
+            });
+
+            it("should handle errors setting options", () => {
+                var expectedError = new Error("Parsing is not possible");
+                var errorSpyBad = jasmine.createSpy().and.throwError(expectedError);
+                window.echarts.setOption = errorSpyBad;
+                loadChart(lineExample);
+                expect(echartsShowLoadingSpy).toHaveBeenCalledTimes(1);
+                expect(echartsClearSpy).toHaveBeenCalledTimes(1);
+                expect(echartsHideLoadingSpy).toHaveBeenCalledTimes(1);
+
+                expect(MashupPlatform.widget.log).toHaveBeenCalledWith("Error loading the new options in ECharts: " +
+                    expectedError, MashupPlatform.log.ERROR);
+            });
+
+            it("should handle invalid options", () => {
+                loadChart("invalid options");
+                expect(echartsShowLoadingSpy).toHaveBeenCalledTimes(1);
+                expect(echartsClearSpy).toHaveBeenCalledTimes(1);
+                expect(echartsHideLoadingSpy).toHaveBeenCalledTimes(1);
+
+                expect(MashupPlatform.widget.log)
+                    .toHaveBeenCalledWith("Invalid ECharts options. Should be a JSON object", MashupPlatform.log.ERROR);
             });
         });
 

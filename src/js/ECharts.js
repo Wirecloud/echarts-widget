@@ -76,11 +76,13 @@ var ECharts = (function () {
         if (data && typeof data === "object") {
             try {
                 echart.setOption(data, true);
-                echart.hideLoading();
             } catch (e) {
                 MashupPlatform.widget.log("Error loading the new options in ECharts: " + e, MashupPlatform.log.ERROR);
             }
+        } else {
+            MashupPlatform.widget.log("Invalid ECharts options. Should be a JSON object", MashupPlatform.log.ERROR);
         }
+        echart.hideLoading();
     };
 
     return eCharts;
