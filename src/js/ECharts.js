@@ -80,7 +80,6 @@ var ECharts = (function () {
             } catch (e) {
                 MashupPlatform.widget.log("Error loading the new options in ECharts: " + e, MashupPlatform.log.ERROR);
             }
-            // lastEChartData = data;
         }
     };
 
