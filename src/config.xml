@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Ficodes" name="echarts" version="0.0.1">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Ficodes" name="echarts" version="0.0.2">
 
     <details>
         <title>ECharts widget</title>
@@ -9,7 +9,7 @@
         <description>ECharts widget</description>
         <longdescription>DESCRIPTION.md</longdescription>
         <changelog>doc/changelog.md</changelog>
-        <image>images/echarts.png</image>
+        <image>images/echarts_logo_black_background.png</image>
         <doc>doc/userguide.md</doc>
         <license>Apache License 2.0</license>
         <issuetracker>https://github.com/Wirecloud/echarts-widget/issues</issuetracker>
@@ -20,15 +20,14 @@
     </requirements>
 
     <preferences>
-        <!--<preference name="historical_server" type="text" label="historical_server" default="https://sthdata.tampere.fiware.cityvision.cloud" />-->
     </preferences>
 
     <wiring>
         <inputendpoint
             name="echarts_options"
             type="text"
-            label="Incoming EChart options"
-            description="Incoming EChart options JSON"
+            label="EChart options"
+            description="EChart options JSON object"
             friendcode="echarts_options"
         />
     </wiring>
