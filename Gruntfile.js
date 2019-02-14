@@ -54,6 +54,12 @@ module.exports = function (grunt) {
             }
         },
 
+        coveralls: {
+            library: {
+                src: 'build/coverage/lcov/lcov.info',
+            }
+        },
+
         strip_code: {
             multiple_files: {
                 src: ['build/src/js/**/*.js']
