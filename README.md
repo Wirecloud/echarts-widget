@@ -1,6 +1,10 @@
 # ECharts Widget
 
-The echart-widget is a WireCloud widget that provides an easy way to to create interactive charts/graphs using the [ECharts Library](https://ecomfe.github.io/echarts-doc/public/en/index.html).
+
+[![Build Status](https://travis-ci.org/Wirecloud/echarts-widget.svg?branch=develop)](https://travis-ci.org/Wirecloud/echarts-widget)
+[![Coverage Status](https://coveralls.io/repos/github/Wirecloud/echarts-widget/badge.svg?branch=develop)](https://coveralls.io/github/Wirecloud/echarts-widget?branch=develop)
+
+The echarts-widget is a WireCloud widget that provides an easy way to to create interactive charts/graphs using the [ECharts Library](https://ecomfe.github.io/echarts-doc/public/en/index.html).
 
 ## How it's works?
 Send the [ECharts option JSON](https://ecomfe.github.io/echarts-doc/public/en/option.html#title) to the `echarts_options` input endpoint.
