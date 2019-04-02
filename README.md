@@ -1,8 +1,7 @@
 # ECharts Widget
 
 [![](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/visualization.svg)](https://www.fiware.org/developers/catalogue/)
-![](https://img.shields.io/github/license/Wirecloud/echarts-widget.svg)
-
+![](https://img.shields.io/github/license/Wirecloud/echarts-widget.svg)<br/>
 [![Build Status](https://travis-ci.org/Wirecloud/echarts-widget.svg?branch=develop)](https://travis-ci.org/Wirecloud/echarts-widget)
 [![Coverage Status](https://coveralls.io/repos/github/Wirecloud/echarts-widget/badge.svg?branch=develop)](https://coveralls.io/github/Wirecloud/echarts-widget?branch=develop)
 
