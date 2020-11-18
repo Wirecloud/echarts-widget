@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Ficodes" name="echarts" version="0.0.2">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Ficodes" name="echarts" version="0.0.3a3">
 
     <details>
-        <title>ECharts widget</title>
+        <title>ECharts</title>
         <homepage>https://github.com/Wirecloud/echarts-widget</homepage>
         <authors>Carlos Blanco &lt;cblanco@ficodes.com&gt;</authors>
         <email>projects@ficodes.com</email>

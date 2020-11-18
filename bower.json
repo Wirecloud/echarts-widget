@@ -2,7 +2,8 @@
   "name": "widget",
   "dependencies": {
     "moment": "2.22.2",
-    "echarts": "4.2.0-rc.2"
+    "echarts": "4.2.0-rc.2",
+    "js-xlsx": "0.15.2"
   },
   "exportsOverride": {
     "echarts": {
@@ -10,6 +11,9 @@
     },
     "moment": {
       "js": "min/moment-with-locales.min.js"
+    },
+    "js-xlsx": {
+      "js": "dist/xlsx.mini.min.js"
     }
   }
 }
