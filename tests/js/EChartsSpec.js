@@ -118,7 +118,7 @@
     };
 
     const clearDocument = function clearDocument() {
-        var elements = document.querySelectorAll('body > *:not(.jasmine_html-reporter)');
+        var elements = shadowDOM.querySelector("body").children;
 
         for (var i = 0; i < elements.length; i++) {
             elements[i].parentElement.removeChild(elements[i]);
@@ -132,8 +132,6 @@
     var resizeSpy = jasmine.createSpy('resize');
     describe("ECharts", function () {
 
-        var widget;
-
         beforeAll(() => {
             window.MashupPlatform = new MockMP({
                 type: 'widget',
@@ -142,6 +140,14 @@
                 inputs: ["echarts_options"],
                 outputs: [],
             });
+
+            let div = document.createElement('div');
+            div.id = 'widget';
+            document.body.appendChild(div);
+            div.attachShadow({mode: 'open'});
+            let shadowBody = document.createElement('body');
+            div.shadowRoot.appendChild(shadowBody);
+            window.shadowDOM = div.shadowRoot;
         });
 
         beforeEach(() => {
@@ -163,7 +169,9 @@
                 resize: resizeSpy
             };
 
-            widget = new ECharts();
+            if (!(window.widget instanceof window.FICODES_ECharts)) {
+                window.widget = new window.FICODES_ECharts(MashupPlatform, shadowDOM, undefined);
+            }
         });
 
         afterEach(() => {
@@ -172,7 +180,7 @@
         describe("echarts_options endpoint", () => {
 
             it("should handle null options", () => {
-                loadChart(null);
+                widget.loadChart(null);
                 expect(echartsClearSpy).toHaveBeenCalledTimes(1);
                 expect(echartsShowLoadingSpy).toHaveBeenCalledTimes(1);
                 expect(echartsSetOptionSpy).toHaveBeenCalledWith(expectedNullOptions);
@@ -181,15 +189,15 @@
             });
 
             it("should handle basic Line chart", () => {
-                loadChart(lineExample);
+                widget.loadChart(lineExample);
                 expect(echartsShowLoadingSpy).toHaveBeenCalledTimes(1);
                 expect(echartsSetOptionSpy).toHaveBeenCalledWith(lineExample, true);
                 expect(echartsHideLoadingSpy).toHaveBeenCalledTimes(1);
             });
 
             it("should handle basic Line chart and then sunburstChart", () => {
-                loadChart(lineExample);
-                loadChart(sunburstChart);
+                widget.loadChart(lineExample);
+                widget.loadChart(sunburstChart);
                 expect(echartsShowLoadingSpy).toHaveBeenCalledTimes(2);
                 expect(echartsClearSpy).toHaveBeenCalledTimes(2);
                 expect(echartsSetOptionSpy).toHaveBeenCalledWith(lineExample, true);
@@ -200,8 +208,8 @@
             it("should handle errors setting options", () => {
                 var expectedError = new Error("Parsing is not possible");
                 var errorSpyBad = jasmine.createSpy().and.throwError(expectedError);
-                window.echarts.setOption = errorSpyBad;
-                loadChart(lineExample);
+                widget.echart.setOption = errorSpyBad;
+                widget.loadChart(lineExample);
                 expect(echartsShowLoadingSpy).toHaveBeenCalledTimes(1);
                 expect(echartsClearSpy).toHaveBeenCalledTimes(1);
                 expect(echartsHideLoadingSpy).toHaveBeenCalledTimes(1);
@@ -211,7 +219,7 @@
             });
 
             it("should handle invalid options", () => {
-                loadChart("invalid options");
+                widget.loadChart("invalid options");
                 expect(echartsShowLoadingSpy).toHaveBeenCalledTimes(1);
                 expect(echartsClearSpy).toHaveBeenCalledTimes(1);
                 expect(echartsHideLoadingSpy).toHaveBeenCalledTimes(1);

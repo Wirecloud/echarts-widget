@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Ficodes" name="echarts" version="0.0.2">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Ficodes" name="echarts" version="1.0.0">
+    <macversion>2</macversion>
 
     <details>
         <title>ECharts widget</title>
@@ -33,6 +34,12 @@
     </wiring>
 
     <contents src="index.html"/>
+    <scripts>
+        <script src="lib/js/moment-with-locales.min.js"/>
+        <script src="lib/js/echarts.min.js"/>
+        <script src="js/ECharts.js"/>
+    </scripts>
+    <entrypoint name="FICODES_ECharts" />
     <rendering height="400px" width="30%"/>
 
 </widget>

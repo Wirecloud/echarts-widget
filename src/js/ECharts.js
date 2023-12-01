@@ -3,12 +3,9 @@
  * Copyright (C) 2019 Future Internet Consulting and Development Solutions S.L. All Rights Reserved.
  *
  */
-
-/* exported ECharts */
 /* globals echarts */
 
-
-var ECharts = (function () {
+(function () {
 
     "use strict";
 
@@ -16,74 +13,82 @@ var ECharts = (function () {
     // CLASS DEFINITION
     // =========================================================================
 
-    var echart;
+    class Widget {
+        constructor(MashupPlatform, shadowDOM, _) {
+            this.MashupPlatform = MashupPlatform;
+            this.shadowDOM = shadowDOM;
 
+            this.eCharts();
+        }
 
-    var eCharts = function eCharts() {
+        eCharts() {
+            var container = this.shadowDOM.getElementById('echartContainer');
+            this.echart = echarts.init(container);
+            // New ECharts options handler
+            this.MashupPlatform.wiring.registerCallback("echarts_options", this.loadChart.bind(this));
 
-        var container = document.getElementById('echartContainer');
-        echart = echarts.init(container);
-        // New ECharts options handler
-        MashupPlatform.wiring.registerCallback("echarts_options", loadChart);
+            // Resize handler
+            window.addEventListener("resize", () => {
+                if (this.echart != null) {
+                    this.echart.resize();
+                }
+            });
 
-        // Resize handler
-        window.addEventListener("resize",() => {
-            if (echart != null) {
-                echart.resize();
-            }
-        });
+            this.MashupPlatform.widget.context.registerCallback(function (newValues) {
+                if ("heightInPixels" in newValues || "widthInPixels" in newValues) {
+                    this.echart.resize();
+                }
+            }.bind(this));
+        }
 
-        /* test-code */
-        window.loadChart = loadChart;
-        /* end-test-code */
-    };
+        loadChart(data) {
+            if (data == null) {
+                // Load Empty chart
+                this.echart.clear();
+                this.echart.showLoading();
 
-    var loadChart = function loadChart(data) {
-        if (data == null) {
-            // Load Empty chart
-            echart.clear();
-            echart.showLoading();
-
-            var msgOption = {
-                title: {
-                    show: true,
-                    textStyle: {
-                        color: 'grey',
-                        fontSize: 20
+                var msgOption = {
+                    title: {
+                        show: true,
+                        textStyle: {
+                            color: 'grey',
+                            fontSize: 20
+                        },
+                        text: "No Data",
+                        left: 'center',
+                        top: 'center'
                     },
-                    text: "No Data",
-                    left: 'center',
-                    top: 'center'
-                },
-                xAxis: {
-                    show: false
-                },
-                yAxis: {
-                    show: false
-                },
-                series: []
-            };
+                    xAxis: {
+                        show: false
+                    },
+                    yAxis: {
+                        show: false
+                    },
+                    series: []
+                };
 
-            echart.setOption(msgOption);
-            echart.hideLoading();
-            return;
-        }
-
-        // Load new chart
-        echart.clear();
-        echart.showLoading();
-
-        if (data && typeof data === "object") {
-            try {
-                echart.setOption(data, true);
-            } catch (e) {
-                MashupPlatform.widget.log("Error loading the new options in ECharts: " + e, MashupPlatform.log.ERROR);
+                this.echart.setOption(msgOption);
+                this.echart.hideLoading();
+                return;
             }
-        } else {
-            MashupPlatform.widget.log("Invalid ECharts options. Should be a JSON object", MashupPlatform.log.ERROR);
-        }
-        echart.hideLoading();
-    };
 
-    return eCharts;
+            // Load new chart
+            this.echart.clear();
+            this.echart.showLoading();
+
+            if (data && typeof data === "object") {
+                try {
+                    this.echart.setOption(data, true);
+                } catch (e) {
+                    this.MashupPlatform.widget.log("Error loading the new options in ECharts: " + e, MashupPlatform.log.ERROR);
+                }
+            } else {
+                this.MashupPlatform.widget.log("Invalid ECharts options. Should be a JSON object", MashupPlatform.log.ERROR);
+            }
+            this.echart.hideLoading();
+        }
+    }
+
+    window.FICODES_ECharts = Widget;
+
 })();
