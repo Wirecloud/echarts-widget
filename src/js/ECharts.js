@@ -3,7 +3,7 @@
  * Copyright (C) 2019 Future Internet Consulting and Development Solutions S.L. All Rights Reserved.
  *
  */
-/* globals echarts */
+/* globals echarts, ResizeObserver */
 
 (function () {
 
@@ -28,17 +28,21 @@
             this.MashupPlatform.wiring.registerCallback("echarts_options", this.loadChart.bind(this));
 
             // Resize handler
-            window.addEventListener("resize", () => {
-                if (this.echart != null) {
-                    this.echart.resize();
-                }
-            });
+            if ('ResizeObserver' in window) {
+                this.resizeObserver = new ResizeObserver(() => {
+                    if (this.echart != null) {
+                        this.echart.resize();
+                    }
+                });
 
-            this.MashupPlatform.widget.context.registerCallback(function (newValues) {
-                if ("heightInPixels" in newValues || "widthInPixels" in newValues) {
-                    this.echart.resize();
-                }
-            }.bind(this));
+                this.resizeObserver.observe(container);
+            } else {
+                this.MashupPlatform.widget.context.registerCallback(function (newValues) {
+                    if ("heightInPixels" in newValues || "widthInPixels" in newValues) {
+                        this.echart.resize();
+                    }
+                }.bind(this));
+            }
         }
 
         loadChart(data) {

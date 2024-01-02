@@ -145,14 +145,14 @@
             div.id = 'widget';
             document.body.appendChild(div);
             div.attachShadow({mode: 'open'});
-            let shadowBody = document.createElement('body');
+            window.shadowBody = document.createElement('body');
             div.shadowRoot.appendChild(shadowBody);
             window.shadowDOM = div.shadowRoot;
         });
 
         beforeEach(() => {
             clearDocument();
-            document.body.innerHTML += HTML_FIXTURE_CODE;
+            window.shadowBody.innerHTML += HTML_FIXTURE_CODE;
             MashupPlatform.reset();
             echartsSetOptionSpy.calls.reset();
             echartsClearSpy.calls.reset();
