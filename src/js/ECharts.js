@@ -76,14 +76,22 @@
             this.echart.clear();
             this.echart.showLoading();
 
+            if (data && typeof data === "string") {
+                try {
+                    data = JSON.parse(data);
+                } catch (e) {
+                    this.MashupPlatform.widget.log("Error parsing the ECharts options: " + e, this.MashupPlatform.log.WARN);
+                }
+            }
+
             if (data && typeof data === "object") {
                 try {
                     this.echart.setOption(data, true);
                 } catch (e) {
-                    this.MashupPlatform.widget.log("Error loading the new options in ECharts: " + e, MashupPlatform.log.ERROR);
+                    this.MashupPlatform.widget.log("Error loading the new options in ECharts: " + e, this.MashupPlatform.log.ERROR);
                 }
             } else {
-                this.MashupPlatform.widget.log("Invalid ECharts options. Should be a JSON object", MashupPlatform.log.ERROR);
+                this.MashupPlatform.widget.log("Invalid ECharts options. Should be a JSON object", this.MashupPlatform.log.ERROR);
             }
             this.echart.hideLoading();
         }
