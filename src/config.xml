@@ -10,7 +10,7 @@
         <description>ECharts widget</description>
         <longdescription>DESCRIPTION.md</longdescription>
         <changelog>doc/changelog.md</changelog>
-        <image>images/echarts_logo_black_background.png</image>
+        <image>images/echarts_logo.png</image>
         <doc>doc/userguide.md</doc>
         <license>Apache License 2.0</license>
         <issuetracker>https://github.com/Wirecloud/echarts-widget/issues</issuetracker>
