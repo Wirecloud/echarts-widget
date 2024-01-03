@@ -2,7 +2,7 @@
   "name": "widget",
   "dependencies": {
     "moment": "2.22.2",
-    "echarts": "4.2.0-rc.2"
+    "echarts": "5.4.3"
   },
   "exportsOverride": {
     "echarts": {
