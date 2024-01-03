@@ -20,7 +20,7 @@ There are no output endpoints defined in this widget.
 
 ## Usage
 
-Send to **EChart options** endpoint an [ECharts option JSON](https://echarts.apache.org/en/api.html#echartsInstance.setOption), for example, a simple linear chart:
+Send to **EChart options** endpoint an [ECharts option JSON](https://echarts.apache.org/en/option.html#title), for example, a simple linear chart:
 ```
 {
     "xAxis": {
