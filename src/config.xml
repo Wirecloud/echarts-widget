@@ -21,6 +21,13 @@
     </requirements>
 
     <preferences>
+        <preference
+            name="merge"
+            type="boolean"
+            label="Merge data"
+            description="Merge incoming data with previous data"
+            default="false"
+        />
     </preferences>
 
     <wiring>
@@ -30,6 +37,34 @@
             label="EChart options"
             description="EChart options JSON object"
             friendcode="echarts_options"
+        />
+        <outputendpoint
+            name="click"
+            type="text"
+            label="Click event"
+            description="Click event JSON object, containing the data clicked"
+            friendcode="*"
+        />
+        <outputendpoint
+            name="dblclick"
+            type="text"
+            label="Double click event"
+            description="Double click event JSON object, containing the data double clicked"
+            friendcode="*"
+        />
+        <outputendpoint
+            name="hover"
+            type="text"
+            label="Hover event"
+            description="Hover event JSON object, containing the data hovered"
+            friendcode="*"
+        />
+        <outputendpoint
+            name="highlight"
+            type="text"
+            label="Highlight event"
+            description="Highlight event JSON object, containing the data highlighted"
+            friendcode="*"
         />
     </wiring>
 

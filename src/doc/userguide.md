@@ -12,16 +12,35 @@ There are no settings defined in this widget.
 
 - **EChart options**: Load new ECharts options JSON.
 
-This endpoint expects to receive an [ECharts option JSON](https://echarts.apache.org/en/api.html#echartsInstance.setOption)
+This endpoint expects to receive an [ECharts option JSON](https://echarts.apache.org/en/option.html#title)
 
 ### Output Endpoints
 
-There are no output endpoints defined in this widget.
+The following output endpoints are available and will be triggered when the corresponding event is fired. The payload of the event will follow the following format:
+
+```json
+{
+    "event": "event_name",
+    "batch": [
+        {
+            "seriesIndex": 0,
+            "dataIndex": 0,
+            "data": <Raw data object, as given in the Echarts options object>
+        }
+        ...
+    ]
+}
+```
+
+- **Click event**: Click event on any data point of the chart.
+- **Double click event**: Double click event on any data point of the chart.
+- **Hover event**: Mouseover event on any data point of the chart.
+- **Highlight event**: Hightlight of any set of data points of the chart (More info [here](https://echarts.apache.org/en/api.html#events.highlight)).
 
 ## Usage
 
 Send to **EChart options** endpoint an [ECharts option JSON](https://echarts.apache.org/en/option.html#title), for example, a simple linear chart:
-```
+```json
 {
     "xAxis": {
         "type": "category",

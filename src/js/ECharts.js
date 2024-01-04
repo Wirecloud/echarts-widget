@@ -18,6 +18,9 @@
             this.MashupPlatform = MashupPlatform;
             this.shadowDOM = shadowDOM;
 
+            // Not used, but needed to avoid errors
+            this.MashupPlatform.prefs.registerCallback(function (_) {});
+
             this.eCharts();
         }
 
@@ -43,6 +46,31 @@
                     }
                 }.bind(this));
             }
+
+            this.echart.on('mouseover', (event) => {
+                this.MashupPlatform.wiring.pushEvent('hover', this.createSingleDataEvent('hover', event));
+            });
+
+            this.echart.on('click', (event) => {
+                this.MashupPlatform.wiring.pushEvent('click', this.createSingleDataEvent('click', event));
+            });
+
+            this.echart.on('dblclick', (event) => {
+                this.MashupPlatform.wiring.pushEvent('dblclick', this.createSingleDataEvent('dblclick', event));
+            });
+
+            this.echart.on('highlight', (event) => {
+                const dataObjs = [];
+                event.batch.forEach((item) => {
+                    dataObjs.push(this.createDataObj(item.seriesIndex, item.dataIndex));
+                });
+                const eventData = {
+                    event: 'highlight',
+                    batch: dataObjs
+                }
+
+                this.MashupPlatform.wiring.pushEvent('highlight', eventData);
+            });
         }
 
         loadChart(data) {
@@ -90,7 +118,7 @@
 
             if (data && typeof data === "object") {
                 try {
-                    this.echart.setOption(data, true);
+                    this.echart.setOption(data, !this.MashupPlatform.prefs.get("merge"));
                 } catch (e) {
                     this.MashupPlatform.widget.log("Error loading the new options in ECharts: " + e, this.MashupPlatform.log.ERROR);
                 }
@@ -98,6 +126,24 @@
                 this.MashupPlatform.widget.log("Invalid ECharts options. Should be a JSON object", this.MashupPlatform.log.ERROR);
             }
             this.echart.hideLoading();
+        }
+
+        createDataObj(seriesIndex, dataIndex) {
+            const data = this.echart.getOption().series[seriesIndex].data[dataIndex];
+            return {
+                seriesIndex: seriesIndex,
+                dataIndex: dataIndex,
+                data: data
+            };
+        }
+
+        createSingleDataEvent(name, event) {
+            const dataObj = this.createDataObj(event.seriesIndex, event.dataIndex);
+            const eventData = {
+                event: name,
+                batch: [dataObj]
+            }
+            return eventData;
         }
     }
 

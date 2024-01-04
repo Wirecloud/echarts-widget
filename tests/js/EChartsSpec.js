@@ -117,6 +117,16 @@
         series: []
     };
 
+    const singleDataEvent = {
+        seriesIndex: 0,
+        dataIndex: 0,
+        data: 820
+    }
+
+    const multipleDataEvent = {
+        batch: [singleDataEvent]
+    }
+
     const clearDocument = function clearDocument() {
         var elements = shadowDOM.querySelector("body").children;
 
@@ -130,15 +140,17 @@
     var echartsHideLoadingSpy = jasmine.createSpy("hideLoading");
     var echartsShowLoadingSpy = jasmine.createSpy("showLoading");
     var resizeSpy = jasmine.createSpy('resize');
+    var echartsOnSpy = jasmine.createSpy('on');
     describe("ECharts", function () {
 
         beforeAll(() => {
             window.MashupPlatform = new MockMP({
                 type: 'widget',
                 prefs: {
+                    merge: false
                 },
                 inputs: ["echarts_options"],
-                outputs: [],
+                outputs: ["highlight", "hover", "click", "dblclick"],
             });
 
             let div = document.createElement('div');
@@ -158,6 +170,8 @@
             echartsClearSpy.calls.reset();
             echartsHideLoadingSpy.calls.reset();
             echartsShowLoadingSpy.calls.reset();
+            resizeSpy.calls.reset();
+            echartsOnSpy.calls.reset();
             const return_this = function () {return this;};
 
             window.echarts = {
@@ -166,7 +180,8 @@
                 clear: echartsClearSpy,
                 hideLoading: echartsHideLoadingSpy,
                 showLoading: echartsShowLoadingSpy,
-                resize: resizeSpy
+                resize: resizeSpy,
+                on: echartsOnSpy
             };
 
             if (!(window.widget instanceof window.FICODES_ECharts)) {
@@ -226,6 +241,40 @@
 
                 expect(MashupPlatform.widget.log)
                     .toHaveBeenCalledWith("Invalid ECharts options. Should be a JSON object", MashupPlatform.log.ERROR);
+            });
+
+            it("should handle events", () => {
+                const onSpy = jasmine.createSpy('on').and.callFake((event, callback) => {
+                    callback(event === 'highlight' ? multipleDataEvent : singleDataEvent);
+                });
+                const getOptionSpy = jasmine.createSpy('getOption').and.returnValue(lineExample);
+
+                window.echarts.on = onSpy;
+                window.echarts.getOption = getOptionSpy;
+
+                window.widget = new window.FICODES_ECharts(MashupPlatform, shadowDOM, undefined);
+                widget.loadChart(lineExample);
+
+                expect(onSpy).toHaveBeenCalledTimes(4);
+                expect(getOptionSpy).toHaveBeenCalledTimes(4);
+
+                expect(MashupPlatform.wiring.pushEvent).toHaveBeenCalledTimes(4);
+                expect(MashupPlatform.wiring.pushEvent).toHaveBeenCalledWith('highlight', {
+                    event: 'highlight',
+                    batch: [singleDataEvent]
+                });
+                expect(MashupPlatform.wiring.pushEvent).toHaveBeenCalledWith('hover', {
+                    event: 'hover',
+                    batch: [singleDataEvent]
+                });
+                expect(MashupPlatform.wiring.pushEvent).toHaveBeenCalledWith('click', {
+                    event: 'click',
+                    batch: [singleDataEvent]
+                });
+                expect(MashupPlatform.wiring.pushEvent).toHaveBeenCalledWith('dblclick', {
+                    event: 'dblclick',
+                    batch: [singleDataEvent]
+                });
             });
         });
 
