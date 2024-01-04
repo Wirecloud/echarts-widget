@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Ficodes" name="echarts" version="0.0.2">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Ficodes" name="echarts" version="1.0.0">
+    <macversion>2</macversion>
 
     <details>
         <title>ECharts widget</title>
@@ -9,7 +10,7 @@
         <description>ECharts widget</description>
         <longdescription>DESCRIPTION.md</longdescription>
         <changelog>doc/changelog.md</changelog>
-        <image>images/echarts_logo_black_background.png</image>
+        <image>images/echarts_logo.png</image>
         <doc>doc/userguide.md</doc>
         <license>Apache License 2.0</license>
         <issuetracker>https://github.com/Wirecloud/echarts-widget/issues</issuetracker>
@@ -20,6 +21,13 @@
     </requirements>
 
     <preferences>
+        <preference
+            name="merge"
+            type="boolean"
+            label="Merge data"
+            description="Merge incoming data with previous data"
+            default="false"
+        />
     </preferences>
 
     <wiring>
@@ -30,9 +38,43 @@
             description="EChart options JSON object"
             friendcode="echarts_options"
         />
+        <outputendpoint
+            name="click"
+            type="text"
+            label="Click event"
+            description="Click event JSON object, containing the data clicked"
+            friendcode="*"
+        />
+        <outputendpoint
+            name="dblclick"
+            type="text"
+            label="Double click event"
+            description="Double click event JSON object, containing the data double clicked"
+            friendcode="*"
+        />
+        <outputendpoint
+            name="hover"
+            type="text"
+            label="Hover event"
+            description="Hover event JSON object, containing the data hovered"
+            friendcode="*"
+        />
+        <outputendpoint
+            name="highlight"
+            type="text"
+            label="Highlight event"
+            description="Highlight event JSON object, containing the data highlighted"
+            friendcode="*"
+        />
     </wiring>
 
     <contents src="index.html"/>
+    <scripts>
+        <script src="lib/js/moment-with-locales.min.js"/>
+        <script src="lib/js/echarts.min.js"/>
+        <script src="js/ECharts.js"/>
+    </scripts>
+    <entrypoint name="FICODES_ECharts" />
     <rendering height="400px" width="30%"/>
 
 </widget>
