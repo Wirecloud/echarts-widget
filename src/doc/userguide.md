@@ -14,6 +14,27 @@ There are no settings defined in this widget.
 
 This endpoint expects to receive an [ECharts option JSON](https://echarts.apache.org/en/option.html#title)
 
+It can also contain a function `onChart` that will be called with the chart object as parameter, so the sender can make any use of it. For example:
+
+```javascript
+{
+    "xAxis": {
+        "type": "category",
+        "data": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    },
+    "yAxis": {
+        "type": "value"
+    },
+    "series": [{
+        "data": [820, 932, 901, 934, 1290, 1330, 1320],
+        "type": "line"
+    }],
+    "onChart": function(chart) {
+        console.log("The chart object is:", chart);
+    }
+}
+```
+
 ### Output Endpoints
 
 The following output endpoints are available and will be triggered when the corresponding event is fired. The payload of the event will follow the following format:

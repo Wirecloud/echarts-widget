@@ -150,6 +150,11 @@
             }
 
             if (data && typeof data === "object") {
+                // A way of passing the chart object to the sender for it to make any use of it
+                if ('onChart' in data) {
+                    data.onChart(this.echart);
+                }
+
                 try {
                     this.echart.setOption(data, !this.MashupPlatform.prefs.get("merge"));
                 } catch (e) {

@@ -1,3 +1,7 @@
+## 1.0.1 (2025-09-23)
+
+- Adds the ability to pass the chart object to the sender through the input data.
+
 ## 1.0.0 (2023-12-28)
 
 - Updates the widget to `macversion` 2.

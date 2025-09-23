@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Ficodes" name="echarts" version="1.0.0">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Ficodes" name="echarts" version="1.0.1">
     <macversion>2</macversion>
 
     <details>
