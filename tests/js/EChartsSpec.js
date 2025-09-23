@@ -117,8 +117,18 @@
         series: []
     };
 
+    const singleDataEvent = {
+        seriesIndex: 0,
+        dataIndex: 0,
+        data: 820
+    }
+
+    const multipleDataEvent = {
+        batch: [singleDataEvent]
+    }
+
     const clearDocument = function clearDocument() {
-        var elements = document.querySelectorAll('body > *:not(.jasmine_html-reporter)');
+        var elements = shadowDOM.querySelector("body").children;
 
         for (var i = 0; i < elements.length; i++) {
             elements[i].parentElement.removeChild(elements[i]);
@@ -130,28 +140,38 @@
     var echartsHideLoadingSpy = jasmine.createSpy("hideLoading");
     var echartsShowLoadingSpy = jasmine.createSpy("showLoading");
     var resizeSpy = jasmine.createSpy('resize');
+    var echartsOnSpy = jasmine.createSpy('on');
     describe("ECharts", function () {
-
-        var widget;
 
         beforeAll(() => {
             window.MashupPlatform = new MockMP({
                 type: 'widget',
                 prefs: {
+                    merge: false
                 },
                 inputs: ["echarts_options"],
-                outputs: [],
+                outputs: ["highlight", "hover", "click", "dblclick"],
             });
+
+            let div = document.createElement('div');
+            div.id = 'widget';
+            document.body.appendChild(div);
+            div.attachShadow({mode: 'open'});
+            window.shadowBody = document.createElement('body');
+            div.shadowRoot.appendChild(shadowBody);
+            window.shadowDOM = div.shadowRoot;
         });
 
         beforeEach(() => {
             clearDocument();
-            document.body.innerHTML += HTML_FIXTURE_CODE;
+            window.shadowBody.innerHTML += HTML_FIXTURE_CODE;
             MashupPlatform.reset();
             echartsSetOptionSpy.calls.reset();
             echartsClearSpy.calls.reset();
             echartsHideLoadingSpy.calls.reset();
             echartsShowLoadingSpy.calls.reset();
+            resizeSpy.calls.reset();
+            echartsOnSpy.calls.reset();
             const return_this = function () {return this;};
 
             window.echarts = {
@@ -160,10 +180,13 @@
                 clear: echartsClearSpy,
                 hideLoading: echartsHideLoadingSpy,
                 showLoading: echartsShowLoadingSpy,
-                resize: resizeSpy
+                resize: resizeSpy,
+                on: echartsOnSpy
             };
 
-            widget = new ECharts();
+            if (!(window.widget instanceof window.FICODES_ECharts)) {
+                window.widget = new window.FICODES_ECharts(MashupPlatform, shadowDOM, undefined);
+            }
         });
 
         afterEach(() => {
@@ -172,7 +195,7 @@
         describe("echarts_options endpoint", () => {
 
             it("should handle null options", () => {
-                loadChart(null);
+                widget.loadChart(null);
                 expect(echartsClearSpy).toHaveBeenCalledTimes(1);
                 expect(echartsShowLoadingSpy).toHaveBeenCalledTimes(1);
                 expect(echartsSetOptionSpy).toHaveBeenCalledWith(expectedNullOptions);
@@ -181,15 +204,15 @@
             });
 
             it("should handle basic Line chart", () => {
-                loadChart(lineExample);
+                widget.loadChart(lineExample);
                 expect(echartsShowLoadingSpy).toHaveBeenCalledTimes(1);
                 expect(echartsSetOptionSpy).toHaveBeenCalledWith(lineExample, true);
                 expect(echartsHideLoadingSpy).toHaveBeenCalledTimes(1);
             });
 
             it("should handle basic Line chart and then sunburstChart", () => {
-                loadChart(lineExample);
-                loadChart(sunburstChart);
+                widget.loadChart(lineExample);
+                widget.loadChart(sunburstChart);
                 expect(echartsShowLoadingSpy).toHaveBeenCalledTimes(2);
                 expect(echartsClearSpy).toHaveBeenCalledTimes(2);
                 expect(echartsSetOptionSpy).toHaveBeenCalledWith(lineExample, true);
@@ -200,8 +223,8 @@
             it("should handle errors setting options", () => {
                 var expectedError = new Error("Parsing is not possible");
                 var errorSpyBad = jasmine.createSpy().and.throwError(expectedError);
-                window.echarts.setOption = errorSpyBad;
-                loadChart(lineExample);
+                widget.echart.setOption = errorSpyBad;
+                widget.loadChart(lineExample);
                 expect(echartsShowLoadingSpy).toHaveBeenCalledTimes(1);
                 expect(echartsClearSpy).toHaveBeenCalledTimes(1);
                 expect(echartsHideLoadingSpy).toHaveBeenCalledTimes(1);
@@ -211,13 +234,47 @@
             });
 
             it("should handle invalid options", () => {
-                loadChart("invalid options");
+                widget.loadChart("invalid options");
                 expect(echartsShowLoadingSpy).toHaveBeenCalledTimes(1);
                 expect(echartsClearSpy).toHaveBeenCalledTimes(1);
                 expect(echartsHideLoadingSpy).toHaveBeenCalledTimes(1);
 
                 expect(MashupPlatform.widget.log)
                     .toHaveBeenCalledWith("Invalid ECharts options. Should be a JSON object", MashupPlatform.log.ERROR);
+            });
+
+            it("should handle events", () => {
+                const onSpy = jasmine.createSpy('on').and.callFake((event, callback) => {
+                    callback(event === 'highlight' ? multipleDataEvent : singleDataEvent);
+                });
+                const getOptionSpy = jasmine.createSpy('getOption').and.returnValue(lineExample);
+
+                window.echarts.on = onSpy;
+                window.echarts.getOption = getOptionSpy;
+
+                window.widget = new window.FICODES_ECharts(MashupPlatform, shadowDOM, undefined);
+                widget.loadChart(lineExample);
+
+                expect(onSpy).toHaveBeenCalledTimes(4);
+                expect(getOptionSpy).toHaveBeenCalledTimes(4);
+
+                expect(MashupPlatform.wiring.pushEvent).toHaveBeenCalledTimes(4);
+                expect(MashupPlatform.wiring.pushEvent).toHaveBeenCalledWith('highlight', {
+                    event: 'highlight',
+                    batch: [singleDataEvent]
+                });
+                expect(MashupPlatform.wiring.pushEvent).toHaveBeenCalledWith('hover', {
+                    event: 'hover',
+                    batch: [singleDataEvent]
+                });
+                expect(MashupPlatform.wiring.pushEvent).toHaveBeenCalledWith('click', {
+                    event: 'click',
+                    batch: [singleDataEvent]
+                });
+                expect(MashupPlatform.wiring.pushEvent).toHaveBeenCalledWith('dblclick', {
+                    event: 'dblclick',
+                    batch: [singleDataEvent]
+                });
             });
         });
 

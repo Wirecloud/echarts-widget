@@ -1,3 +1,16 @@
+## 1.0.1 (2025-09-23)
+
+- Adds the ability to pass the chart object to the sender through the input data.
+
+## 1.0.0 (2023-12-28)
+
+- Updates the widget to `macversion` 2.
+- Updates the echarts library to 5.4.3.
+- Allows to give the input options as a JSON string.
+- Adds output endpoints for events of the chart (highlight, click, dblclick and hover).
+- Adds an option to allow merging data.
+- Removes unneccessary moment library.
+
 ## 0.0.2 (2019-05-03)
 
 Initial version
